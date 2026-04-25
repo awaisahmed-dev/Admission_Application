@@ -1,0 +1,48 @@
+SELECT DATE_FORMAT(FROM_UNIXTIME(created_at), '%e %b %Y') AS 'date_formatted' FROM student_fee WHERE date_formatted > '2017-04-30';
+
+SELECT DATE_FORMAT(FROM_UNIXTIME(created_at), '%d %c %Y'), id FROM student_fee WHERE DATE_FORMAT(created_at,'%Y%c%d') ;
+
+SELECT * FROM student_fee sf
+WHERE (sf.created_at < "2017-04-30") AND sf.fee_year = 2017 AND sf.school_id = 22;
+
+SELECT SUM(fee_amount+fee_addon_sum) total_due_amount,
+ SUM(discount_amount) discount, SUM(sfadd.admission_fee) adm_fee,
+ SUM(sfadd.annual_fee) ann_fee, SUM(sfp.paid_amount) ttal_paid
+ FROM student_fee sf
+ JOIN student_fee_addon sfadd ON(sf.id = sfadd.student_fee_id)
+ JOIN student_fee_payment_receipt sfp ON(sf.id = sfp.student_fee_id)	
+ WHERE ( DATE_FORMAT(FROM_UNIXTIME(sf.created_at), '%Y-%c-%d') >= '2017-4-01'
+ AND DATE_FORMAT(FROM_UNIXTIME(sf.created_at), '%Y-%c-%d') <= '2017-4-30')
+ AND sf.fee_year = 2017 AND sf.school_id = 22;
+
+
+SELECT SUM(fee_amount+fee_addon_sum) total_due_amount,
+ SUM(discount_amount) discount, SUM(sfadd.admission_fee) adm_fee,
+ SUM(sfadd.annual_fee) ann_fee, SUM(sfp.paid_amount) ttal_paid
+ FROM student_fee sf
+ JOIN student_fee_addon sfadd ON(sf.id = sfadd.student_fee_id)
+ JOIN student_fee_payment_receipt sfp ON(sf.id = sfp.student_fee_id)	
+ WHERE sf.fee_month = "april,june" AND sf.fee_year = 2017 AND sf.school_id = 22;
+ 
+ 
+ SELECT SUM(fee_amount+fee_addon_sum) total_due_amount,
+ SUM(discount_amount) discount, SUM(sfadd.admission_fee) adm_fee,
+ SUM(sfadd.annual_fee) ann_fee, SUM(sfp.paid_amount) ttal_paid
+ FROM student_fee sf
+ JOIN student_fee_addon sfadd ON(sf.id = sfadd.student_fee_id)
+ JOIN student_fee_payment_receipt sfp ON(sf.id = sfp.student_fee_id)	
+ WHERE (sf.created_at > "2017-3-31" AND sf.created_at < "2017-4-01") AND sf.fee_year = 2017 AND sf.school_id = 22;
+
+
+SELECT COUNT(id) FROM student_fee sf WHERE fee_month = "april,june" AND fee_year = 2017 AND sf.school_id = 22;
+SELECT COUNT(id) FROM student_fee sf WHERE fee_month = "april,june" AND fee_year = 2017 AND sf.school_id = 22 AND STATUS = 1;
+
+SELECT COUNT(id) FROM student WHERE admission_date > '2017-03-31' AND school_id = 22;
+
+SELECT * FROM student WHERE left_date > '2017-03-31' AND school_id = 22;
+
+
+SELECT * FROM student_fee_payment_receipt sf
+WHERE ( DATE_FORMAT(FROM_UNIXTIME(sf.created_at), '%Y-%c-%d') >= '2017-4-01'
+ AND DATE_FORMAT(FROM_UNIXTIME(sf.created_at), '%Y-%c-%d') <= '2017-4-30')
+  AND sf.school_id = 22;

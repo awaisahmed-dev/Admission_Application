@@ -1,0 +1,289 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 14, 2018, 2:40:06 PM
+    Author     : Analyst
+*/
+
+@font-face {
+            font-family: arialFont; 
+            font-weight: bold;    
+            src: url('http://schooladmin.kidsroboticacademy.com/font/arial.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: Verdana;
+            src: url('http://schooladmin.kidsroboticacademy.com/font/Verdana.ttf') format('truetype');
+            font-weight: bold;    
+        }  
+        body{ margin: 0;  -webkit-print-color-adjust: exact; }
+        
+        table { font-size: 14px;page-break-inside:auto; width: 100%; }
+        table .no-bottom-border tr:last-child td{border-bottom: none !important;}
+         td .no-bottom-border {border-bottom: none !important;}
+            tr    { page-break-inside:avoid; page-break-after:auto }
+            tr{ height: 0.5in;}
+            thead { display:table-header-group }
+            td {min-height: 15px;}
+            td .sp1{width: 0.7in !important}
+            td .sp3{width: 1.8in !important}
+            tfoot { display:table-footer-group }
+            
+            
+            .font6 {font-size: 6px !important;} .font8 {font-size: 8px !important;}            .font10 {font-size: 10px !important;} .font12 {font-size: 12px;} .font16 {font-size: 16px;} .font16 {font-size: 18px;}
+            .school-titlle{text-align: center; padding: 15px 0 0 0}
+            .textright{ text-align: right;}
+            
+            #container { position: relative;   /*width: 3in;*/   }
+
+        div#background-logo {
+          width: 120px;
+          height: 100px;
+           /*z-index: -5;*/
+           /*overflow: hidden;*/
+           font-size: 35px;
+           opacity: 0.2;
+           float: left; margin-top: 66px; 
+           position: absolute;
+        }    
+        div#background-logo img:first-child{ width: inherit; z-index: -5;}
+        div#background-logo img{ width: inherit; z-index:  5; opacity: 1;  position: relative}
+        #background {
+           position: absolute;
+           top: 0;
+           /*left: 0;*/
+           bottom: 0;
+           right: 0;
+           z-index: -5;
+           overflow: hidden;
+           font-size: 35px;
+           opacity: 0.1;
+        }
+        
+        .main_card{
+            /*padding-top: 0.3in;*/
+             width: 2.28in;
+             float: left;
+             /*height: 8.27In;*/
+             /*margin: 0 2px;*/
+        }
+
+        .card {
+          /*border: black 1px solid;*/
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0.2, 0.0);
+          background-color: #33849c;
+          background: linear-gradient(white, #33849c );  /*Standard syntax */
+          width: 2.28in;
+          height: 3.49in;
+          margin: 10px 0px 15px 0;
+          /*padding: 10px 1px;*/
+          text-align: center;
+          font-family: arialFont;
+          /*float: left;*/
+        }
+        .card_b {
+           -webkit-transform: rotate(180deg);  
+          /*border: black 1px solid;*/
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0.2, 0.0);
+          background-color: #f1f1f2;
+          /*background: -webkit-linear-gradient(white, #33849c );  Standard syntax */
+          width: 2.28in;
+          height: 3.41in;
+          /*margin: 8px 0px;*/
+          padding: 2px 0 5px 0px;
+          text-align: center;
+          font-family: arialFont
+              
+          /*float: left;*/
+        }
+        
+        .card_content{
+            height: 3.09in;
+            width: 2.1in;
+            margin: 0 8px 0 7px;
+        }
+        
+        .schoolhead{font-weight: bolder; margin: 5px}
+
+        .title {
+          color: grey;
+          font-size: 14px;
+        }
+
+        button {
+          border: none;
+          outline: 0;
+          display: inline-block;
+          padding: 6px;
+          color: white;
+          background-color: #008D4C;
+          text-align: center;
+          cursor: pointer;
+          width: 100%;
+          font-size: 14px;
+        }
+
+        a {
+          text-decoration: none;
+          font-size: 22px;
+          color: black;
+        }
+
+        button:hover, a:hover {
+          opacity: 0.7;
+        }
+        backward { 
+     display: inline-block;
+    -moz-transform: scale(-1, 1); 
+    -webkit-transform: scale(-1, 1);  
+    transform: scale(-1, 1); 
+} 
+
+
+.main {
+	background-color: #f1f1f2;
+	width: 2.28in;
+	height: 3.49in;
+	margin: auto;
+}
+.top {
+	    width: 100%;
+    height: 34%;
+	background: #33849c;
+	-moz-border-radius: 0 0 100% 100%;
+	-webkit-border-radius: 0 0 100% 100%;
+	border-radius: 0 0 100% 100%;
+	border-bottom: solid 6px #1a1547;
+	text-align: center;
+}
+.top h1 {
+	font-size: 16px;
+	color: #FFF;
+	margin: auto;
+	font-family:Verdana, Geneva, sans-serif;
+	margin-top: 20px ;
+	text-transform:uppercase;
+	display: inline-block;
+	    width: 75%;
+}
+.shapimg {
+	width: 120px;
+	height: 120px;
+	/*background: #33849c url(images/photo.jpg) no-repeat center center;*/
+	background-size: 100px;
+	-moz-border-radius: 100% 100%;
+	-webkit-border-radius: 100% 100%;
+	border-radius: 100% 100%;
+	border: solid 2px #1a1547;
+	text-align: center;
+	margin: 20px auto;
+}
+.shape1 {
+	min-width: 185px;
+	height: auto;
+	-webkit-clip-path: polygon(0% 0%, 0 100%, 89% 100%, 74% 2%);
+	clip-path: polygon(0% 0%, 0 100%, 89% 100%, 74% 2%);
+	background-color: #33849c;
+	margin-top: 50px;
+        z-index: 1;
+        position: relative;
+}
+.shape2 {
+	width: 170px;
+	height: auto;
+	-webkit-clip-path: polygon(0% 0%, 19% 100%, 100% 100%, 100% 0%);
+	clip-path: polygon(0% 0%, 19% 100%, 100% 100%, 100% 0%);
+	background-color: #2d6577;
+	float: right;
+}
+
+.shape2 h2 , .shape1 h2{
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+    color: #FFF;
+    margin-left: 30px;
+      margin-top: 8px;
+    margin-bottom: 8px;
+	font-family:arialFont;
+	    width: 180px;
+}
+
+.shape1 h2{
+	margin-left:15px;
+	display:inline-block;
+}
+
+
+.info ul li {
+    font-size: 12px;
+    font-family: arialFont;
+    font-weight: normal;
+    list-style-type: none;
+    text-transform: capitalize;
+    margin-top: 3px;
+    letter-spacing: 0.2px;
+	
+}
+
+
+.info ul {
+	width:54%;
+	margin:0;
+	padding:5px 0px 0 12px;
+	float:left;
+	
+}
+
+.info img{
+	width:80px;
+	height:70px;
+	float:left;
+	margin-top: 5px;}
+.topshap {
+	border-radius: 0 0 0 100%;
+	width: 100%;
+	height: 40px;
+	background-color: #2b859f;
+	border-bottom: solid 6px #2b6579;
+	text-align: center;
+        
+}
+.back_logo_box {position: relative; z-index: 1; margin: -33px 0 0 0px;     }
+
+.year, .sid {margin-top: 60px;}
+.bottom {
+	    width: 100%;
+    height: auto;
+    background-color: #d6d6d7;
+    padding: 2px 0;
+    /*margin-top: 18px;*/
+}
+.bottom ul li {
+        list-style: none;
+        text-align: left;
+	font-size: 8px;
+	font-family: arialFont;
+	font-weight: normal;
+	text-transform: capitalize;
+	margin-top: 4px;
+	letter-spacing: 0.2px;
+	
+	color: #48484a;
+}
+.bottom ul {
+	width: fit-content;
+	margin: 0;
+	padding: 0px 0px 0 8px;
+	margin: auto;
+}
+.bottombar {
+    width: 100%;
+    height: 20px;
+    background-color: #2b859f;
+    border-top: solid 3px #FFF;
+    color:white;
+    font-size: 12px;
+}

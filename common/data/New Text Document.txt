@@ -1,0 +1,30 @@
+
+INSERT INTO student_class 
+	(
+	parent_class_id, 
+	title, 
+	school_id, 
+	details,
+	`status`
+	)
+	
+	SELECT
+	parent_class_id, 
+	title, 
+	23,
+	details,
+	1 
+	FROM student_class WHERE school_id = 22
+	
+	;
+////////////////////////////////////////////
+	
+	SELECT * FROM student_class WHERE id = 71 OR parent_class_id = 71;
+
+///////////////////////////////////////////////
+	
+	UPDATE student_class t, (SELECT DISTINCT ID, (parent_class_id+63) p_id
+                        FROM student_class
+                       WHERE school_id = 23 AND parent_class_id !=0) t1
+   SET t.parent_class_id = (t1.p_id)
+ WHERE  t.ID = t1.ID AND t.school_id = 23 AND t.parent_class_id != 0

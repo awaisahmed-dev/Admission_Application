@@ -1,0 +1,8 @@
+POST http://schoolapi.kidsroboticacademy.com/api/v1/device-registration
+
+POST http://schoolapi.kidsroboticacademy.com/api/v1/scan-log
+
+PUT http://school-management.local/frontend/web/api/v1/notification/15?device_key=15de21c670ae7c3f6f3f1f37029303c9
+
+
+GET http://schoolapi.kidsroboticacademy.com/api/v1/notification?device_key=15de21c670ae7c3f6f3f1f37029303c9

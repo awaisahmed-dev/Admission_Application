@@ -1,0 +1,2 @@
+tests\acceptance\\LoginCest.php:showTimeline
+tests\acceptance\\SitemapCest.php:siteModules
