@@ -21,7 +21,12 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($parentModel, 'father_first_name') ?>
 <?= $form->field($parentModel, 'father_last_name') ?>
-<?= $form->field($parentModel, 'father_mobile') ?>
+<!-- <?= $form->field($parentModel, 'father_mobile') ?> -->
+ <?= $form->field($parentModel,'father_mobile')
+->textInput([
+'type'=>'number',
+'maxlength'=>15
+]) ?>
 <?= $form->field($parentModel, 'father_email') ?>
 
 <?= $form->field($parentModel, 'mother_title')->dropDownList([
@@ -33,15 +38,30 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($parentModel, 'mother_first_name') ?>
 <?= $form->field($parentModel, 'mother_last_name') ?>
-<?= $form->field($parentModel, 'mother_mobile') ?>
+<!-- <?= $form->field($parentModel, 'mother_mobile') ?> -->
+ <?= $form->field($parentModel,'mother_mobile')
+->textInput([
+'type'=>'number',
+'maxlength'=>15
+]) ?>
 <?= $form->field($parentModel, 'mother_email') ?>
 
 <?= $form->field($parentModel, 'address')->textarea() ?>
-<?= $form->field($parentModel, 'home_phone') ?>
+<!-- <?= $form->field($parentModel, 'home_phone') ?> -->
+<?= $form->field($parentModel,'home_phone')
+->textInput([
+'type'=>'number',
+'maxlength'=>15
+]) ?>
 
 <h4>Emergency Contact</h4>
 <?= $form->field($parentModel, 'emergency_contact_name') ?>
-<?= $form->field($parentModel, 'emergency_contact_number') ?>
+<!-- <?= $form->field($parentModel, 'emergency_contact_number') ?> -->
+ <?= $form->field($parentModel,'emergency_contact_number')
+->textInput([
+'type'=>'number',
+'maxlength'=>15
+]) ?>
 <?= $form->field($parentModel, 'emergency_relationship') ?>
 
 
@@ -61,7 +81,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($child, "[$i]first_name") ?>
     <?= $form->field($child, "[$i]last_name") ?>
-    <?= $form->field($child, "[$i]date_of_birth")->input('date') ?>
+    <!-- <?= $form->field($child, "[$i]date_of_birth")->input('date') ?> -->
+     <?= $form->field($child,"[$i]date_of_birth")
+    ->input('date',[
+    'onfocus'=>'this.showPicker()'
+    ]) ?>
 
     <?= $form->field($child, "[$i]gender")->dropDownList([
         1 => 'Male',
@@ -169,6 +193,9 @@ use yii\widgets\ActiveForm;
 <?= $form->field($policyModel, 'volunteer_teaching_islamic')->checkbox()->label('Teaching: Islamic Studies') ?>
 <?= $form->field($policyModel, 'volunteer_teaching_urdu')->checkbox()->label('Teaching: Urdu') ?> -->
 
+<?= $form->errorSummary($policyModel, [
+'class'=>'alert alert-danger'
+]) ?>
 
 <div class="checkbox">
     <label>
@@ -258,7 +285,13 @@ use yii\widgets\ActiveForm;
 
 <?= $form->field($policyModel, 'signature_name')->textInput()->label('Signature (Full Name)') ?>
 
-<?= $form->field($policyModel, 'signed_date')->input('date')->label('Date') ?>
+<!-- <?= $form->field($policyModel, 'signed_date')->input('date')->label('Date') ?> -->
+ <?= $form->field($policyModel,'signed_date')
+->input('date',[
+'value'=>date('Y-m-d'),
+'onfocus'=>'this.showPicker()'
+])->label('Date') ?>
+
 
 
 <hr>
@@ -284,7 +317,10 @@ document.getElementById('add-child').addEventListener('click', function () {
 
         <input type="text" name="ChildModel[${childIndex}][first_name]" class="form-control" placeholder="First Name"><br>
         <input type="text" name="ChildModel[${childIndex}][last_name]" class="form-control" placeholder="Last Name"><br>
-        <input type="date" name="ChildModel[${childIndex}][date_of_birth]" class="form-control"><br>
+        <input type="date"
+        name="ChildModel[${childIndex}][date_of_birth]"
+        class="form-control"
+        onfocus="this.showPicker()"> <br>
 
         <select name="ChildModel[${childIndex}][gender]" class="form-control">
             <option value="">Select Gender</option>
@@ -313,12 +349,34 @@ document.getElementById('add-child').addEventListener('click', function () {
         <input type="checkbox" name="ChildModel[${childIndex}][allergy_to_medication]" value="1">
         Allergy to Medication
         </label>
+        <br><br>
+        <button type="button"
+        class="btn btn-danger remove-child">
+        Remove Child
+        </button>
 
 
 
     </div>`;
 
-    wrapper.insertAdjacentHTML('beforeend', html);
+    wrapper.insertAdjacentHTML('beforeend',html);
+
     childIndex++;
+    });
+
+
+    document.addEventListener('click',function(e){
+
+    if(e.target.classList.contains('remove-child')){
+
+    if(document.querySelectorAll('.child-item').length>1){
+    e.target.closest('.child-item').remove();
+    }
+    else{
+    alert('At least one child required');
+    }
+
+    }
+
 });
 </script>

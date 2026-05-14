@@ -2,11 +2,13 @@
 
 use yii\helpers\Html;
 
-$this->title = 'Update Parent: ' . $model->father_first_name;
+$this->title = 'Update Application # ' . $parentModel->id;
 ?>
 
 <h1><?= Html::encode($this->title) ?></h1>
 
-<?= $this->render('_form', [
-    'model' => $model,
+<?= $this->render('/form/index',[
+'parentModel'=>$parentModel,
+'children'=>$children,
+'policyModel'=>$policyModel
 ]) ?>

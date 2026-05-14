@@ -40,7 +40,8 @@ class ParentModelSearch extends ParentModel
      */
     public function search($params)
     {
-        $query = ParentModel::find();
+        // $query = ParentModel::find();
+        $query = ParentModel::find()->orderBy(['id'=>SORT_DESC]);
 
         // add conditions that should always apply here
 

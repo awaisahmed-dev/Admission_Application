@@ -38,6 +38,10 @@ $this->title = 'Students';
 
         'created_at:datetime',
 
-        ['class' => 'yii\grid\ActionColumn'],
+        // ['class' => 'yii\grid\ActionColumn'],
+        [
+        'class'=>'yii\grid\ActionColumn',
+        'template'=>'{view} {update}'
+        ],
     ],
 ]); ?>

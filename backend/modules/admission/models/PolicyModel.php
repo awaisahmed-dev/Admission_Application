@@ -50,16 +50,112 @@ class PolicyModel extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+    // public function rules()
+    // {
+    //     return [
+    //         [['signature_name', 'signed_date'], 'required'],
+    //         [['parent_id', 'excursion_consent', 'photo_consent', 'data_usage_consent', 'fee_agreement', 'attendance_fee_agreement', 'volunteer_cleaning', 'volunteer_snacks', 'volunteer_supervision', 'volunteer_admin', 'volunteer_teaching_quran', 'volunteer_teaching_islamic', 'volunteer_teaching_urdu', 'arrival_on_time', 'toilet_responsibility', 'dress_code', 'after_class_responsibility', 'device_policy', 'information_correct', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
+    //         [['signed_date'], 'safe'],
+    //         [['signature_name'], 'string', 'max' => 255],
+    //         [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => ParentModel::className(), 'targetAttribute' => ['parent_id' => 'id']],
+    //         [
+    //         [
+    //          'volunteer_cleaning',
+    //          'volunteer_snacks',
+    //          'volunteer_supervision',
+    //          'volunteer_admin',
+    //          'volunteer_teaching_quran',
+    //          'volunteer_teaching_islamic',
+    //          'volunteer_teaching_urdu'
+    //         ],
+    //         'validateVolunteer'
+    //     ],
+    //     ];
+    // }
+
     public function rules()
-    {
-        return [
-            [['signature_name', 'signed_date'], 'required'],
-            [['parent_id', 'excursion_consent', 'photo_consent', 'data_usage_consent', 'fee_agreement', 'attendance_fee_agreement', 'volunteer_cleaning', 'volunteer_snacks', 'volunteer_supervision', 'volunteer_admin', 'volunteer_teaching_quran', 'volunteer_teaching_islamic', 'volunteer_teaching_urdu', 'arrival_on_time', 'toilet_responsibility', 'dress_code', 'after_class_responsibility', 'device_policy', 'information_correct', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
-            [['signed_date'], 'safe'],
-            [['signature_name'], 'string', 'max' => 255],
-            [['parent_id'], 'exist', 'skipOnError' => true, 'targetClass' => ParentModel::className(), 'targetAttribute' => ['parent_id' => 'id']],
-        ];
+{
+    return [
+
+        [
+            [
+                'excursion_consent',
+                'photo_consent',
+                'data_usage_consent',
+                'fee_agreement',
+                'attendance_fee_agreement',
+                'arrival_on_time',
+                'toilet_responsibility',
+                'dress_code',
+                'after_class_responsibility',
+                'device_policy',
+                'information_correct',
+                'signature_name',
+                'signed_date'
+            ],
+            'required'
+        ],
+
+        [[
+            'parent_id',
+            'excursion_consent',
+            'photo_consent',
+            'data_usage_consent',
+            'fee_agreement',
+            'attendance_fee_agreement',
+            'volunteer_cleaning',
+            'volunteer_snacks',
+            'volunteer_supervision',
+            'volunteer_admin',
+            'volunteer_teaching_quran',
+            'volunteer_teaching_islamic',
+            'volunteer_teaching_urdu',
+            'arrival_on_time',
+            'toilet_responsibility',
+            'dress_code',
+            'after_class_responsibility',
+            'device_policy',
+            'information_correct'
+        ], 'integer'],
+
+        [['signed_date'],'safe'],
+
+        [['signature_name'],'string','max'=>255],
+
+        [
+            [
+                'volunteer_cleaning',
+                'volunteer_snacks',
+                'volunteer_supervision',
+                'volunteer_admin',
+                'volunteer_teaching_quran',
+                'volunteer_teaching_islamic',
+                'volunteer_teaching_urdu'
+            ],
+            'validateVolunteer'
+        ],
+    ];
+}
+
+
+public function validateVolunteer($attribute,$params)
+{
+    if(
+        !$this->volunteer_cleaning &&
+        !$this->volunteer_snacks &&
+        !$this->volunteer_supervision &&
+        !$this->volunteer_admin &&
+        !$this->volunteer_teaching_quran &&
+        !$this->volunteer_teaching_islamic &&
+        !$this->volunteer_teaching_urdu
+    ){
+        $this->addError(
+            'volunteer_cleaning',
+            'At least one volunteer option must be selected.'
+        );
     }
+}
+
 
     /**
      * {@inheritdoc}
@@ -115,5 +211,29 @@ class PolicyModel extends \yii\db\ActiveRecord
             'updatedByAttribute' => 'updated_by',
         ],
     ];
+}
+public function init()
+{
+parent::init();
+
+if($this->isNewRecord){
+
+$this->excursion_consent=1;
+$this->photo_consent=1;
+$this->data_usage_consent=1;
+$this->fee_agreement=1;
+$this->attendance_fee_agreement=1;
+
+$this->arrival_on_time=1;
+$this->toilet_responsibility=1;
+$this->dress_code=1;
+$this->after_class_responsibility=1;
+$this->device_policy=1;
+
+$this->information_correct=1;
+
+$this->signed_date=date('Y-m-d');
+
+}
 }
 }

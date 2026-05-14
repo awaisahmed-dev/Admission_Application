@@ -124,4 +124,87 @@ class ParentController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+// public function actionAdmit($id)
+// {
+//     $parent = $this->findModel($id);
+
+//     foreach ($parent->children as $child) {
+
+//         // Step 1: mark enrolled
+//         $child->student_enrolment = 1;
+//         $child->save(false);
+
+//         // Step 2: insert into students table
+//         $student = new Student();
+//         $student->parent_id = $parent->id;
+//         $student->child_id = $child->id;
+
+//         $student->first_name = $child->first_name;
+//         $student->last_name = $child->last_name;
+//         $student->gender = $child->gender;
+//         $student->date_of_birth = $child->date_of_birth;
+
+//         $student->school_name = $child->school_name;
+//         $student->school_class = $child->school_class;
+
+//         $student->admission_type = $child->admission_type;
+//         $student->created_at = time();
+
+//         if (!$student->save()) {
+//             print_r($student->errors);
+//             die();
+//         }
+//     }
+
+//     Yii::$app->session->setFlash('success', 'Students Enrolled Successfully');
+
+//     return $this->redirect(['view', 'id' => $id]);
+// }
+public function actionAdmit($id)
+{
+    $parent = $this->findModel($id);
+
+    foreach ($parent->children as $child) {
+
+        // duplicate check
+        if (\backend\modules\admission\models\Student::find()
+            ->where(['child_id' => $child->id])->exists()) {
+            continue;
+        }
+
+        // child enrolled
+        $child->student_enrolment = 1;
+        $child->save(false);
+
+        // create student
+        $student = new \backend\modules\admission\models\Student();
+
+        $student->parent_id = $parent->id;
+        $student->child_id = $child->id;
+
+        $student->first_name = $child->first_name;
+        $student->last_name = $child->last_name;
+        $student->gender = $child->gender;
+        $student->date_of_birth = $child->date_of_birth;
+
+        $student->school_name = $child->school_name;
+        $student->school_class = $child->school_class;
+
+        $student->admission_type = $child->admission_type;
+        $student->created_at = time();
+
+        $student->save(false);
+    }
+
+    // parent status update
+    $parent->status = 1;
+    $parent->save(false);
+
+    Yii::$app->session->setFlash('success', 'Students Enrolled Successfully');
+
+    // return $this->redirect(['index']);
+    return $this->redirect(['/admission/student/index']);
+}
 }

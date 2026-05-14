@@ -31,6 +31,29 @@ class FormController extends Controller
 
             $policyModel->load(Yii::$app->request->post());
 
+            $post=Yii::$app->request->post('PolicyModel',[]);
+
+            $policyModel->volunteer_cleaning =
+            isset($post['volunteer_cleaning']) ? 1:0;
+
+            $policyModel->volunteer_snacks =
+            isset($post['volunteer_snacks']) ? 1:0;
+
+            $policyModel->volunteer_supervision =
+            isset($post['volunteer_supervision']) ? 1:0;
+
+            $policyModel->volunteer_admin =
+            isset($post['volunteer_admin']) ? 1:0;
+
+            $policyModel->volunteer_teaching_quran =
+            isset($post['volunteer_teaching_quran']) ? 1:0;
+
+            $policyModel->volunteer_teaching_islamic =
+            isset($post['volunteer_teaching_islamic']) ? 1:0;
+
+            $policyModel->volunteer_teaching_urdu =
+            isset($post['volunteer_teaching_urdu']) ? 1:0;
+
             // 🔥 TRANSACTION START
             $transaction = Yii::$app->db->beginTransaction();
 
@@ -48,6 +71,7 @@ class FormController extends Controller
                     // SAVE POLICY
                     $policyModel->parent_id = $parentModel->id;
                     if (!$policyModel->save()) {
+                    if(!$policyModel->validate() || !$policyModel->save(false))
                         throw new \Exception('Policy not saved');
                     }
 

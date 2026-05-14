@@ -48,10 +48,51 @@ class ParentModel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['father_first_name', 'father_last_name', 'father_mobile', 'address', 'emergency_contact_name', 'emergency_contact_number', 'emergency_relationship'], 'required'],
+            // [['father_first_name', 'father_last_name', 'father_mobile', 'address', 'emergency_contact_name', 'emergency_contact_number', 'emergency_relationship'], 'required'],
+            [
+            [
+                'father_title',
+                'father_first_name',
+                'father_last_name',
+                'father_mobile',
+                'father_email'
+            ],
+            'required'
+            ],
+            [
+            [
+                'mother_title',
+                'mother_first_name',
+                'mother_last_name',
+                'mother_mobile',
+                'mother_email'
+            ],
+            'required'
+            ],
+            [
+            [
+                'address',
+                'emergency_contact_name',
+                'emergency_contact_number',
+                'emergency_relationship'
+            ],
+            'required'
+            ],
             [['address'], 'string'],
             [['status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['father_title', 'father_first_name', 'father_last_name', 'father_mobile', 'father_email', 'mother_title', 'mother_first_name', 'mother_last_name', 'mother_mobile', 'mother_email', 'home_phone', 'emergency_contact_name', 'emergency_contact_number', 'emergency_relationship'], 'string', 'max' => 255],
+            ['status', 'default', 'value' => 0],
+            [
+            [
+                'father_mobile',
+                'mother_mobile',
+                'home_phone',
+                'emergency_contact_number'
+            ],
+            'match',
+            'pattern'=>'/^[0-9]+$/',
+            'message'=>'Numbers only allowed'
+            ],
         ];
     }
 
@@ -112,13 +153,14 @@ class ParentModel extends \yii\db\ActiveRecord
         ],
     ];
 }
-public function beforeSave($insert)
-{
-    if ($insert) {
-        $this->status = 0; // always pending on frontend submit
-        $this->created_at = time();
-    }
 
-    return parent::beforeSave($insert);
+public function init()
+{
+    parent::init();
+
+    if($this->isNewRecord){
+        $this->father_title='Mr';
+        $this->mother_title='Mrs';
+    }
 }
 }

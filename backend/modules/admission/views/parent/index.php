@@ -42,7 +42,7 @@ $this->title = 'Admission Applications';
 
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {delete} {admit}',
+            'template' => '{view} {update} {admit}',
         ],
         [
     'class' => 'yii\grid\ActionColumn',

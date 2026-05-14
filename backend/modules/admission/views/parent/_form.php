@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'mother_last_name')->textInput() ?>
     <?= $form->field($model, 'mother_mobile')->textInput() ?>
     <?= $form->field($model, 'mother_email')->textInput() ?>
-
+        
     <?= $form->field($model, 'address')->textarea(['rows' => 3]) ?>
 
     <?= $form->field($model, 'emergency_contact_name')->textInput() ?>

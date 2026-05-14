@@ -83,18 +83,88 @@ class ParentController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+    // public function actionUpdate($id)
+    // {
+    //     $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    //     if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    //         return $this->redirect(['view', 'id' => $model->id]);
+    //     }
+
+    //     return $this->render('update', [
+    //         'model' => $model,
+    //     ]);
+    // }
+
+
+
+    public function actionUpdate($id)
+{
+    $parentModel = $this->findModel($id);
+
+    // children load
+    $children = $parentModel->children;
+
+    if(empty($children)){
+        $children = [new ChildModel()];
+    }
+
+    // policy load
+    $policyModel = $parentModel->policies
+        ? $parentModel->policies[0]
+        : new PolicyModel();
+
+
+
+    if(
+        $parentModel->load(Yii::$app->request->post()) &&
+        $policyModel->load(Yii::$app->request->post())
+    ){
+
+        $childrenData = Yii::$app->request->post('ChildModel',[]);
+
+        $valid=true;
+
+        $parentModel->save(false);
+
+        foreach($children as $i=>$child){
+
+            if(isset($childrenData[$i])){
+                $child->load(
+                    ['ChildModel'=>$childrenData[$i]],
+                    ''
+                );
+
+                if(!$child->save()){
+                    $valid=false;
+                }
+            }
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $policyModel->parent_id=$parentModel->id;
+        $policyModel->save(false);
+
+        if($valid){
+            Yii::$app->session->setFlash(
+                'success',
+                'Updated successfully'
+            );
+
+            return $this->redirect([
+                'view',
+                'id'=>$parentModel->id
+            ]);
+        }
+
     }
+
+    return $this->render('update',[
+        'parentModel'=>$parentModel,
+        'children'=>$children,
+        'policyModel'=>$policyModel
+    ]);
+}
+
 
     /**
      * Deletes an existing ParentModel model.
@@ -208,6 +278,7 @@ public function actionAdmit($id)
     // return $this->redirect(['index']);
     return $this->redirect(['/admission/student/index']);
 }
+
 
 // public function actionUpdate($id)
 // {
