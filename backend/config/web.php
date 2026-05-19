@@ -110,6 +110,11 @@ $config = [
     'admission' => [
     'class' => 'backend\modules\admission\Module',
     ],
+    'commitment' => [
+
+            'class' => 'backend\modules\commitment\Module',
+
+    ],
     'notification' => [
             'class' => 'backend\modules\notification\NotificationModule',
         ],

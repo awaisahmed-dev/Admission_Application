@@ -272,13 +272,18 @@ $defaultImage = !is_null($schoolid) ? '/img/'.$schoolid.'.png' : 'img/anonymous.
                         ],
                         [
                         'label' => 'Parents',
-                        'icon'=>'<i class="fa fa-graduation-cap"></i>',
+                        'icon'=>'<i class="fa fa-users"></i>',
                         'url' => ['/admission/parent/index'],
                         ],
                         [
                         'label' => 'Students',
-                        'icon'=>'<i class="fa fa-graduation-cap"></i>',
+                        'icon'=>'<i class="fa fa-user"></i>',
                         'url' => ['/admission/student/index'],
+                        ],
+                        [
+                        'label' => 'Commitments',
+                        'icon'=>'<i class="fa fa-money"></i>',
+                        'url' => ['/commitment/commitment/index'],
                         ],
                         ],
                         ],
