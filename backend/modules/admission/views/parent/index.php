@@ -31,35 +31,50 @@ $this->title = 'Admission Applications';
             }
         ],
 
-        [
+        // [
+        //     'attribute' => 'status',
+        //     'value' => function($model){
+        //         return $model->status == 1 ? 'Admitted' : 'Pending';
+        //     }
+        // ],
+
+            [
             'attribute' => 'status',
+            'format' => 'raw',
             'value' => function($model){
-                return $model->status == 1 ? 'Admitted' : 'Pending';
+
+                if($model->status == 1){
+                    return '<span class="label label-success">Admitted</span>';
+                }
+
+                return '<span class="label label-warning">Pending</span>';
             }
-        ],
+            ],
 
         'created_at:datetime',
 
         [
-            'class' => 'yii\grid\ActionColumn',
-            'template' => '{view} {update} {admit}',
-        ],
-        [
     'class' => 'yii\grid\ActionColumn',
-    'template' => '{admit}',
+    'template' => '{view} {update} {admit}',
+
     'buttons' => [
 
         'admit' => function ($url, $model) {
-            if ($model->status == 0) {   // only show if NOT admitted
-                return Html::a('Admit', ['admit', 'id' => $model->id], [
-                    'class' => 'btn btn-success btn-sm',
-                    'data-confirm' => 'Are you sure to admit this student?',
-                    'data-method' => 'post',
-                ]);
-            }
-            return '<span class="label label-success">Admitted</span>';
-        },
 
+            if ($model->status == 0) {
+
+                return Html::a(
+                    'Admit',
+                    ['admit', 'id' => $model->id],
+                    [
+                        'class' => 'btn btn-success btn-sm',
+                        'data-confirm' => 'Admit student?',
+                    ]
+                );
+            }
+
+            return '';
+        },
     ],
 ],
     ],

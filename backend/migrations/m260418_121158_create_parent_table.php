@@ -39,7 +39,7 @@ class m260418_121158_create_parent_table extends Migration
         'emergency_relationship' => $this->string()->notNull(),
 
         // Status
-        'status' => $this->integer()->notNull()->defaultValue(1),
+        'status' => $this->integer()->notNull()->defaultValue(0),
 
         // Audit Fields
         'created_by' => $this->integer(),
@@ -47,6 +47,21 @@ class m260418_121158_create_parent_table extends Migration
         'created_at' => $this->integer(),
         'updated_at' => $this->integer(),
     ]);
+
+    $this->addColumn(
+    '{{%parent}}',
+    'user_id',
+    $this->integer()
+);
+
+$this->addForeignKey(
+    'fk_parent_user',
+    '{{%parent}}',
+    'user_id',
+    'user',
+    'id',
+    'CASCADE'
+);
 }
 
     /**

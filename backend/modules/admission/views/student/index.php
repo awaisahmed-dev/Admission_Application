@@ -13,35 +13,32 @@ $this->title = 'Students';
 
         'id',
 
-        'first_name',
-        'last_name',
+        'full_name',
+
+        'father_name',
+
+        'mother_name',
+
+        'gender',
+
+        'gr_number',
+
+        'seat_number',
+
+        'admit_in_class',
+
+        'mobile',
+
+        'email',
 
         [
-            'attribute' => 'gender',
-            'value' => function($model){
-                return $model->gender == 1 ? 'Male' : 'Female';
-            }
+            'attribute' => 'admission_date',
+            'format' => ['date','php:d-m-Y']
         ],
 
-        'school_name',
-        'school_class',
-        'admission_type',
-
         [
-            'label' => 'Parent',
-            'value' => function($model){
-                return $model->parent 
-                    ? $model->parent->father_first_name 
-                    : '';
-            }
-        ],
-
-        'created_at:datetime',
-
-        // ['class' => 'yii\grid\ActionColumn'],
-        [
-        'class'=>'yii\grid\ActionColumn',
-        'template'=>'{view} {update}'
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{view} {update}'
         ],
     ],
 ]); ?>

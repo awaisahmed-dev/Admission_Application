@@ -285,4 +285,14 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return $this->email;
     }
+
+    public function generateAuthKey()
+{
+    $this->auth_key = Yii::$app->security->generateRandomString();
+}
+
+public function generateAccessToken()
+{
+    $this->access_token = Yii::$app->security->generateRandomString(64);
+}
 }

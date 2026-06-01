@@ -28,6 +28,7 @@ use Yii;
  * @property int $updated_by
  * @property int $created_at
  * @property int $updated_at
+ * @property int $user_id
  *
  * @property Child[] $children
  * @property Policy[] $policies
@@ -59,6 +60,7 @@ class ParentModel extends \yii\db\ActiveRecord
             ],
             'required'
             ],
+            [['father_email','mother_email'],'email'],
             [
             [
                 'mother_title',
@@ -93,6 +95,7 @@ class ParentModel extends \yii\db\ActiveRecord
             'pattern'=>'/^[0-9]+$/',
             'message'=>'Numbers only allowed'
             ],
+            [['user_id'],'integer'],
         ];
     }
 
@@ -123,6 +126,7 @@ class ParentModel extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
+            'user_id' => 'User ID',
         ];
     }
 
@@ -162,5 +166,12 @@ public function init()
         $this->father_title='Mr';
         $this->mother_title='Mrs';
     }
+}
+public function getUser()
+{
+    return $this->hasOne(
+        User::className(),
+        ['id'=>'user_id']
+    );
 }
 }

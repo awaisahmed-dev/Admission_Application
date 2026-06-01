@@ -8,6 +8,9 @@ use backend\modules\admission\models\ParentModel;
 use backend\modules\admission\models\ChildModel;
 use backend\modules\admission\models\PolicyModel;
 
+use common\models\User;
+use common\models\UserProfile;
+
 class FormController extends Controller
 {
     public function actionIndex()
@@ -20,76 +23,134 @@ class FormController extends Controller
 
         if ($parentModel->load(Yii::$app->request->post())) {
 
-            $childrenData = Yii::$app->request->post('ChildModel', []);
-            $children = [];
+    $policyModel->load(Yii::$app->request->post());
 
-            foreach ($childrenData as $childData) {
-                $child = new ChildModel();
-                $child->load(['ChildModel' => $childData]);
-                $children[] = $child;
-            }
+    $childrenData = Yii::$app->request->post('ChildModel', []);
+    $children = [];
 
-            $policyModel->load(Yii::$app->request->post());
+    foreach ($childrenData as $childData) {
 
-            $post=Yii::$app->request->post('PolicyModel',[]);
+        $child = new ChildModel();
+        $child->attributes = $childData;
 
-            $policyModel->volunteer_cleaning =
-            isset($post['volunteer_cleaning']) ? 1:0;
+        $child->student_enrolment =
+            isset($childData['student_enrolment']) ? 1 : 0;
 
-            $policyModel->volunteer_snacks =
-            isset($post['volunteer_snacks']) ? 1:0;
+        $child->allergy_to_medication =
+            isset($childData['allergy_to_medication']) ? 1 : 0;
 
-            $policyModel->volunteer_supervision =
-            isset($post['volunteer_supervision']) ? 1:0;
+        $children[] = $child;
+    }
 
-            $policyModel->volunteer_admin =
-            isset($post['volunteer_admin']) ? 1:0;
+    $post = Yii::$app->request->post('PolicyModel', []);
 
-            $policyModel->volunteer_teaching_quran =
-            isset($post['volunteer_teaching_quran']) ? 1:0;
+    $policyModel->volunteer_cleaning =
+        isset($post['volunteer_cleaning']) ? 1 : 0;
 
-            $policyModel->volunteer_teaching_islamic =
-            isset($post['volunteer_teaching_islamic']) ? 1:0;
+    $policyModel->volunteer_snacks =
+        isset($post['volunteer_snacks']) ? 1 : 0;
 
-            $policyModel->volunteer_teaching_urdu =
-            isset($post['volunteer_teaching_urdu']) ? 1:0;
+    $policyModel->volunteer_supervision =
+        isset($post['volunteer_supervision']) ? 1 : 0;
 
-            // 🔥 TRANSACTION START
-            $transaction = Yii::$app->db->beginTransaction();
+    $policyModel->volunteer_admin =
+        isset($post['volunteer_admin']) ? 1 : 0;
 
-            try {
-                if ($parentModel->save()) {
+    $policyModel->volunteer_teaching_quran =
+        isset($post['volunteer_teaching_quran']) ? 1 : 0;
 
-                    // SAVE CHILDREN
-                    foreach ($children as $child) {
-                        $child->parent_id = $parentModel->id;
-                        if (!$child->save()) {
-                            throw new \Exception('Child not saved');
-                        }
-                    }
+    $policyModel->volunteer_teaching_islamic =
+        isset($post['volunteer_teaching_islamic']) ? 1 : 0;
 
-                    // SAVE POLICY
-                    $policyModel->parent_id = $parentModel->id;
-                    if (!$policyModel->save()) {
-                    if(!$policyModel->validate() || !$policyModel->save(false))
-                        throw new \Exception('Policy not saved');
-                    }
+    $policyModel->volunteer_teaching_urdu =
+        isset($post['volunteer_teaching_urdu']) ? 1 : 0;
 
-                    $transaction->commit();
 
-                    Yii::$app->session->setFlash('success', 'Application Submitted Successfully');
+    $transaction = Yii::$app->db->beginTransaction();
 
-                    return $this->refresh();
+    // try {
 
-                } else {
-                    throw new \Exception('Parent not saved');
-                }
+        // $parentModel->status = 0;
 
-            } catch (\Exception $e) {
-                $transaction->rollBack();
-                Yii::$app->session->setFlash('error', $e->getMessage());
-            }
+        // $parentModel->save(false);
+
+        // $user = new User();
+
+        //     $user->username = strtolower(
+        //         str_replace(' ', '', $parentModel->father_first_name)
+        //     ) . rand(100,999);
+
+        //     $user->email = $parentModel->father_email;
+
+        //     $password = Yii::$app->security->generateRandomString(8);
+
+        //     $user->setPassword($password);
+
+        //     $user->status = User::STATUS_ACTIVE;
+
+        //     if(!$user->save()){
+        //         throw new \Exception(json_encode($user->errors));
+        //     }
+
+        //     $user->afterSignup();
+
+        //     $parentModel->user_id = $user->id;
+        //     $parentModel->save(false);
+
+        //     $profile = new UserProfile();
+
+        //     $profile->user_id = $user->id;
+
+        //     $profile->firstname =
+        //         $parentModel->father_first_name;
+
+        //     $profile->lastname =
+        //         $parentModel->father_last_name;
+
+        //     $profile->save(false);
+
+        try {
+
+    $parentModel->status = 0;
+
+    if(!$parentModel->save()){
+        throw new \Exception(json_encode($parentModel->errors));
+    }
+
+    foreach ($children as $child) {
+
+        $child->parent_id = $parentModel->id;
+        $child->status = 0;
+
+        if(!$child->save()){
+            throw new \Exception(json_encode($child->errors));
         }
+    }
+
+    $policyModel->parent_id = $parentModel->id;
+    $policyModel->status = 0;
+
+    if(!$policyModel->save()){
+        throw new \Exception(json_encode($policyModel->errors));
+    }
+
+    $transaction->commit();
+
+        Yii::$app->session->setFlash(
+            'success',
+            'Application Submitted Successfully'
+        );
+
+        return $this->refresh();
+
+    } catch (\Exception $e) {
+
+        $transaction->rollBack();
+
+        echo $e->getMessage();
+        die();
+    }
+}
 
         return $this->render('index', [
             'parentModel' => $parentModel,

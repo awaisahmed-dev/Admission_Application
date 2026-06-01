@@ -10,6 +10,12 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use backend\modules\admission\models\Student;
 
+use backend\modules\admission\models\ChildModel;
+use backend\modules\admission\models\PolicyModel;
+
+use common\models\User;
+use common\models\UserProfile;
+
 /**
  * ParentController implements the CRUD actions for ParentModel model.
  */
@@ -63,18 +69,38 @@ class ParentController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+    // public function actionCreate()
+    // {
+    //     $model = new ParentModel();
+
+    //     if ($model->load(Yii::$app->request->post()) && $model->save()) {
+    //         return $this->redirect(['view', 'id' => $model->id]);
+    //     }
+
+    //     return $this->render('create', [
+    //         'model' => $model,
+    //     ]);
+    // }
     public function actionCreate()
-    {
-        $model = new ParentModel();
+{
+    $model = new ParentModel();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+    if ($model->load(Yii::$app->request->post())) {
+
+        $model->status = 0;
+
+        if($model->save()){
+            return $this->redirect([
+                'view',
+                'id'=>$model->id
+            ]);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
+
+    return $this->render('create',[
+        'model'=>$model
+    ]);
+}
 
     /**
      * Updates an existing ParentModel model.
@@ -196,218 +222,363 @@ class ParentController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-
 // public function actionAdmit($id)
 // {
 //     $parent = $this->findModel($id);
 
-//     foreach ($parent->children as $child) {
+//     if(!$parent->user_id){
 
-//         // Step 1: mark enrolled
-//         $child->student_enrolment = 1;
-//         $child->save(false);
+//     $user = new User();
 
-//         // Step 2: insert into students table
-//         $student = new Student();
-//         $student->parent_id = $parent->id;
-//         $student->child_id = $child->id;
+//     $user->username =
+//         strtolower($parent->father_first_name)
+//         . rand(100,999);
 
-//         $student->first_name = $child->first_name;
-//         $student->last_name = $child->last_name;
-//         $student->gender = $child->gender;
-//         $student->date_of_birth = $child->date_of_birth;
+//     $user->email =
+//         $parent->father_email;
 
-//         $student->school_name = $child->school_name;
-//         $student->school_class = $child->school_class;
+//     $user->status =
+//         User::STATUS_ACTIVE;
 
-//         $student->admission_type = $child->admission_type;
-//         $student->created_at = time();
+//     $user->setPassword('123456');
 
-//         if (!$student->save()) {
-//             print_r($student->errors);
-//             die();
-//         }
+//     if(!$user->save()){
+
+//         print_r($user->errors);
+//         die();
 //     }
 
-//     Yii::$app->session->setFlash('success', 'Students Enrolled Successfully');
+//     $profile = new UserProfile();
 
-//     return $this->redirect(['view', 'id' => $id]);
+//     $profile->user_id =
+//         $user->id;
+
+//     $profile->firstname =
+//         $parent->father_first_name;
+
+//     $profile->lastname =
+//         $parent->father_last_name;
+
+//     $profile->save(false);
+
+//     $parent->user_id =
+//         $user->id;
+
+//     $parent->save(false);
 // }
-public function actionAdmit($id)
+
+//     // agar already admit hai
+//     if($parent->status==1){
+
+//         Yii::$app->session->setFlash(
+//             'warning',
+//             'Already admitted'
+//         );
+
+//         return $this->redirect(['index']);
+//     }
+
+//     foreach($parent->children as $child){
+
+//         $student = new Student();
+
+//         // $student->parent_id = 1;
+//         $student->parent_id = $parent->user_id;
+
+
+//         $student->school_id=21;
+
+//         $student->student_key=
+//         'STD'.time().rand(100,999);
+
+//         $student->full_name=
+//         $child->first_name.' '.$child->last_name;
+
+//         $student->surname=
+//         $child->last_name;
+
+//         // $student->gender=
+//         // $child->gender;
+//         $student->gender =
+//         ($child->gender == 1)
+//         ? 'Male'
+//         : 'Female';
+
+//         $student->father_name=
+//         $parent->father_first_name.' '.
+//         $parent->father_last_name;
+
+//         $student->mother_name=
+//         $parent->mother_first_name.' '.
+//         $parent->mother_last_name;
+
+//         $student->date_of_birth=
+//         $child->date_of_birth;
+
+//         $student->admission_date=
+//         date('Y-m-d');
+
+//         $student->address=
+//         $parent->address;
+
+//         $student->mobile=
+//         $parent->father_mobile;
+
+//         $student->email=
+//         $parent->father_email;
+
+//         $student->previous_school=
+//         $child->school_name;
+
+//         $student->admit_in_class=
+//         $child->school_class;
+
+//         $student->status=1;
+
+//         // $student->save(false);
+//         if(!$student->save()){
+//     print_r($student->errors);
+//     die();
+// }
+
+//         // child enrolled
+//         $child->student_enrolment=1;
+//         $child->save(false);
+//     }
+
+//     // parent admitted
+//     $parent->status=1;
+//     $parent->save(false);
+
+//     Yii::$app->session->setFlash(
+//         'success',
+//         'Student admitted successfully'
+//     );
+
+//     return $this->redirect(['index']);
+// }
+
+
+    public function actionAdmit($id)
 {
     $parent = $this->findModel($id);
 
-    foreach ($parent->children as $child) {
+    if($parent->status == 1){
 
-        // duplicate check
-        if (\backend\modules\admission\models\Student::find()
-            ->where(['child_id' => $child->id])->exists()) {
-            continue;
-        }
+        Yii::$app->session->setFlash(
+            'warning',
+            'Already Admitted'
+        );
 
-        // child enrolled
-        $child->student_enrolment = 1;
-        $child->save(false);
-
-        // create student
-        $student = new \backend\modules\admission\models\Student();
-
-        $student->parent_id = $parent->id;
-        $student->child_id = $child->id;
-
-        $student->first_name = $child->first_name;
-        $student->last_name = $child->last_name;
-        $student->gender = $child->gender;
-        $student->date_of_birth = $child->date_of_birth;
-
-        $student->school_name = $child->school_name;
-        $student->school_class = $child->school_class;
-
-        $student->admission_type = $child->admission_type;
-        $student->created_at = time();
-
-        $student->save(false);
+        return $this->redirect(['index']);
     }
 
-    // parent status update
-    $parent->status = 1;
-    $parent->save(false);
+    $transaction = Yii::$app->db->beginTransaction();
 
-    Yii::$app->session->setFlash('success', 'Students Enrolled Successfully');
+    try {
 
-    // return $this->redirect(['index']);
-    return $this->redirect(['/admission/student/index']);
+        if(!$parent->user_id){
+
+            $user = new User();
+
+            $user->school_id = 21;
+
+            $user->branch_id = 1;
+
+            $user->username =
+            strtolower(
+            $parent->father_first_name
+            ).rand(100,999);
+
+            $user->email =
+            $parent->father_email;
+
+            $user->status = 1;
+
+            $user->email_confirmed = 1;
+
+            $user->generateAuthKey();
+
+            $user->generateAccessToken();
+
+            $user->setPassword('123456');
+
+            if(!$user->save()){
+                throw new \Exception(
+                    json_encode($user->errors)
+                );
+            }
+
+            $profile = new UserProfile();
+
+            $profile->user_id =
+            $user->id;
+
+            $profile->full_name =
+            $parent->father_first_name.' '.
+            $parent->father_last_name;
+
+            $profile->firstname =
+            $parent->father_first_name;
+
+            $profile->lastname =
+            $parent->father_last_name;
+
+            $profile->father_name =
+            $parent->father_first_name.' '.
+            $parent->father_last_name;
+
+            $profile->mother_name =
+            $parent->mother_first_name.' '.
+            $parent->mother_last_name;
+
+            $profile->address =
+            $parent->address;
+
+            $profile->phone =
+            $parent->home_phone;
+
+            $profile->cell_number =
+            $parent->father_mobile;
+
+            $profile->emergency_contact =
+            $parent->emergency_contact_number;
+
+            $profile->email_alternate =
+            $parent->father_email;
+
+            $profile->address =
+                $parent->address;
+
+            $profile->phone =
+                $parent->home_phone;
+
+            $profile->cell_number =
+                $parent->father_mobile;
+
+            $profile->emergency_contact =
+                $parent->emergency_contact_number;
+
+            $profile->locale = 'en-US';
+
+            $profile->save(false);
+
+            $parent->user_id =
+                $user->id;
+
+            $parent->save(false);
+        }
+
+
+        foreach($parent->children as $child){
+
+            $student = new Student();
+
+             $lastStudent = Student::find()
+    ->orderBy(['id'=>SORT_DESC])
+    ->one();
+
+    // $student->gr_number =
+    // $lastStudent
+    // ? $lastStudent->gr_number + 1
+    // : 1001;
+        $student->gr_number = (string)(
+        $lastStudent
+        ? ((int)$lastStudent->gr_number + 1)
+        : 1001
+    );
+
+    $lastSeat = Student::find()
+    ->max('seat_number');
+
+    $student->seat_number =
+    $lastSeat
+    ? $lastSeat + 1
+    : 1;
+
+            $student->parent_id =
+                $parent->user_id;
+            // $student->parent_id = $parent->id;
+
+            // $student->school_id = 21;
+            $student->school_id = $user->school_id;
+            // $student->school_id = $parent->school_id;
+
+            $student->student_key =
+                'STD'.time().rand(100,999);
+
+            $student->full_name =
+                $child->first_name.' '.$child->last_name;
+
+            $student->surname =
+                $child->last_name;
+
+            $student->gender =
+                $child->gender == 1
+                ? 'Male'
+                : 'Female';
+
+            $student->father_name =
+                $parent->father_first_name.' '.
+                $parent->father_last_name;
+
+            $student->mother_name =
+                $parent->mother_first_name.' '.
+                $parent->mother_last_name;
+
+            $student->date_of_birth =
+                $child->date_of_birth;
+
+            $student->admission_date =
+                date('Y-m-d');
+
+            $student->address =
+                $parent->address;
+
+            $student->mobile =
+                $parent->father_mobile;
+
+            $student->email =
+                $parent->father_email;
+
+            $student->previous_school =
+                $child->school_name;
+
+            $student->admit_in_class =
+                $child->school_class;
+
+            $student->status = 1;
+
+            if(!$student->save()){
+                throw new \Exception(
+                    json_encode($student->errors)
+                );
+            }
+
+            $child->student_enrolment = 1;
+            $child->save(false);
+        }
+
+        $parent->status = 1;
+        $parent->save(false);
+
+        $transaction->commit();
+
+        Yii::$app->session->setFlash(
+            'success',
+            'Student Admitted Successfully'
+        );
+
+    } catch(\Exception $e){
+
+        $transaction->rollBack();
+
+        throw $e;
+    }
+
+    return $this->redirect(['index']);
+
+    
 }
 
-
-// public function actionUpdate($id)
-// {
-//     $parentModel = ParentModel::findOne($id);
-
-//     if (!$parentModel) {
-//         throw new \yii\web\NotFoundHttpException('Record not found');
-//     }
-
-//     // Load children
-//     $children = ChildModel::find()
-//         ->where(['parent_id'=>$id])
-//         ->all();
-
-//     if(empty($children)){
-//         $children[] = new ChildModel();
-//     }
-
-//     // Load policy
-//     $policyModel = PolicyModel::findOne([
-//         'parent_id'=>$id
-//     ]);
-
-//     if(!$policyModel){
-//         $policyModel = new PolicyModel();
-//         $policyModel->parent_id=$id;
-//     }
-
-
-//     if (
-//         $parentModel->load(Yii::$app->request->post())
-//     ) {
-
-//         $transaction=Yii::$app->db->beginTransaction();
-
-//         try{
-
-//             $parentModel->save(false);
-
-//             /*
-//              CHILDREN UPDATE
-//             */
-//             $childrenPost=
-//                 Yii::$app->request
-//                     ->post('ChildModel',[]);
-
-//             foreach($childrenPost as $i=>$row){
-
-//                 if(isset($children[$i])){
-//                     $child=$children[$i];
-//                 }else{
-//                     $child=new ChildModel();
-//                     $child->parent_id=$id;
-//                 }
-
-//                 $child->attributes=$row;
-
-//                 $child->student_enrolment=
-//                     isset($row['student_enrolment'])
-//                         ?1:0;
-
-//                 $child->allergy_to_medication=
-//                     isset($row['allergy_to_medication'])
-//                         ?1:0;
-
-//                 $child->save(false);
-//             }
-
-
-//             /*
-//              POLICY UPDATE
-//             */
-//             $policyModel->load(
-//                 Yii::$app->request->post()
-//             );
-
-//             $policyModel->volunteer_cleaning =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_cleaning'] ?? 0;
-
-//             $policyModel->volunteer_snacks =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_snacks'] ?? 0;
-
-//             $policyModel->volunteer_supervision =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_supervision'] ?? 0;
-
-//             $policyModel->volunteer_admin =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_admin'] ?? 0;
-
-//             $policyModel->volunteer_teaching_quran =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_teaching_quran'] ?? 0;
-
-//             $policyModel->volunteer_teaching_islamic =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_teaching_islamic'] ?? 0;
-
-//             $policyModel->volunteer_teaching_urdu =
-//                 Yii::$app->request
-//                     ->post('PolicyModel')['volunteer_teaching_urdu'] ?? 0;
-
-
-//             $policyModel->save(false);
-
-
-//             $transaction->commit();
-
-//             Yii::$app->session->setFlash(
-//                 'success',
-//                 'Application Updated Successfully'
-//             );
-
-//             return $this->redirect(['index']);
-
-//         }
-//         catch(\Exception $e){
-
-//             $transaction->rollBack();
-//             throw $e;
-//         }
-//     }
-
-//     return $this->render('update',[
-//         'parentModel'=>$parentModel,
-//         'children'=>$children,
-//         'policyModel'=>$policyModel
-//     ]);
-// }
 }

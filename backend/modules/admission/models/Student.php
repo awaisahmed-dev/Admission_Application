@@ -4,48 +4,83 @@ namespace backend\modules\admission\models;
 
 use Yii;
 
-/**
- * This is the model class for table "student".
- */
 class Student extends \yii\db\ActiveRecord
 {
     public static function tableName()
     {
-        return 'students';
+        return 'student';
     }
 
     public function rules()
     {
         return [
-            [['parent_id', 'child_id', 'created_at'], 'integer'],
-            [['first_name', 'last_name', 'school_name', 'school_class', 'admission_type'], 'string', 'max' => 255],
-            [['gender'], 'integer'],
+
+            [['school_id','parent_id','class_id',
+            'section_id','seat_number',
+            'is_private','status',
+            'created_by','updated_by',
+            'created_at','updated_at'
+            ],'integer'],
+
+            [['previous_recored_date',
+            'date_of_birth',
+            'admission_date',
+            'left_date'
+            ],'safe'],
+
+            [['full_name'],'required'],
+
+            [['fee_discount'],'number'],
+
+            [['address','other_details'],'string'],
+
+            [['student_key','surname',
+            'gr_number','locality',
+            'phone','mobile',
+            'cnic_number','b_form',
+            'vaccination',
+            'religion',
+            'nationality',
+            'seat_number_ninth',
+            'seat_number_tenth'
+            ],'string','max'=>25],
+
+            [['full_name',
+            'father_name',
+            'mother_name',
+            'native_place',
+            'left_reason',
+            'email',
+            'allergies',
+            'previous_school',
+            'progress',
+            'conduct'
+            ],'string','max'=>50],
+
+            [['gender',
+            'admit_in_class',
+            'left_in_class',
+            'garde_in_tenth',
+            'certificate_number'
+            ],'string','max'=>11]
+
         ];
     }
 
-    public function attributeLabels()
+    public function behaviors()
     {
         return [
-            'id' => 'ID',
-            'parent_id' => 'Parent ID',
-            'child_id' => 'Child ID',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
-            'gender' => 'Gender',
-            'school_name' => 'School Name',
-            'school_class' => 'School Class',
-            'admission_type' => 'Admission Type',
-            'created_at' => 'Created At',
+
+            \yii\behaviors\TimestampBehavior::class,
+
+            [
+                'class'=>\yii\behaviors\BlameableBehavior::class,
+                'createdByAttribute'=>'created_by',
+                'updatedByAttribute'=>'updated_by',
+            ]
+
         ];
+        // die('Student.php');
     }
-
-    public function getParent()
-    {
-        return $this->hasOne(ParentModel::class, ['id' => 'parent_id']);
-    }
-
-    public function getChild()
-    {
-        return $this->hasOne(ChildModel::class, ['id' => 'child_id']);
-    }
+    
 }
