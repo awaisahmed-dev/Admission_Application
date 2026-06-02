@@ -117,4 +117,6 @@ class UserProfile extends ActiveRecord
             ? Yii::getAlias($this->avatar_base_url . '/' . $this->avatar_path)
             : $default;
     }
+
+    
 }

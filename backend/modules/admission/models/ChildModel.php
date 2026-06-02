@@ -46,7 +46,8 @@ class ChildModel extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['admission_type', 'first_name', 'last_name', 'date_of_birth', 'gender', 'school_name', 'school_suburb', 'school_class'], 'required'],
+            // [['admission_type', 'first_name', 'last_name', 'date_of_birth', 'gender', 'school_name', 'school_suburb', 'school_class'], 'required'],
+            [['parent_id','admission_type','first_name','last_name','date_of_birth','gender','school_name','school_suburb','school_class'],'required'],
             [['parent_id', 'student_enrolment', 'gender', 'allergy_to_medication', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at'], 'integer'],
             [['admission_type', 'learning_difficulties', 'allergies', 'medications'], 'string'],
             [['date_of_birth'], 'safe'],
