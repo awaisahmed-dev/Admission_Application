@@ -300,6 +300,12 @@ use yii\widgets\ActiveForm;
     <?= Html::submitButton('Submit Application', ['class' => 'btn btn-primary']) ?>
 </div>
 
+<?= Html::hiddenInput(
+    'selected_city',        //================================================
+    '',
+    ['id'=>'selected-city']
+) ?>
+
 <?php ActiveForm::end(); ?>
 
 </div>
@@ -379,4 +385,38 @@ document.getElementById('add-child').addEventListener('click', function () {
     }
 
 });
+</script>
+
+<script>
+
+navigator.geolocation.getCurrentPosition(
+
+function(position){
+
+    $.ajax({
+
+        url: '<?= \yii\helpers\Url::to([
+            "/admission/parent/location"
+        ]) ?>',
+
+        type:'POST',
+
+        data:{
+            lat:position.coords.latitude,
+            lng:position.coords.longitude
+        },
+
+        success:function(response){
+
+            $('#selected-city')
+                .val(response.city);
+
+            console.log(response);
+
+        }
+
+    });
+
+});
+
 </script>

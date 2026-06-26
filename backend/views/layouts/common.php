@@ -4,6 +4,7 @@
  */
 use backend\assets\BackendAsset;
 use backend\widgets\Menu;
+use yii\web\View;
 use common\models\TimelineEvent;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -414,5 +415,16 @@ $defaultImage = !is_null($schoolid) ? '/img/'.$schoolid.'.png' : 'img/anonymous.
             </section><!-- /.content -->
         </aside><!-- /.right-side -->
     </div><!-- ./wrapper -->
+
+//======================================================
+     <?php
+         $this->registerJsFile(
+             '@web/js/browser-notification.js',
+             [
+                 'position' => View::POS_END,
+             ]
+         );
+         ?>
+
 
 <?php $this->endContent(); ?>

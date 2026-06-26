@@ -82,5 +82,21 @@ class Student extends \yii\db\ActiveRecord
         ];
         // die('Student.php');
     }
+
+    public function getParentUser()
+    {
+        return $this->hasOne(
+            \common\models\User::class,
+            ['id' => 'parent_id']
+        );
+    }
+
+    public function getParentProfile()
+    {
+        return $this->hasOne(
+            \common\models\UserProfile::class,
+            ['user_id' => 'parent_id']
+        );
+    }
     
 }
