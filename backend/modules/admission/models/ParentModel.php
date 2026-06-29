@@ -1,6 +1,7 @@
 <?php
 
 namespace backend\modules\admission\models;
+use common\commands\SendEmailCommand;
 
 use Yii;
 
@@ -95,7 +96,7 @@ class ParentModel extends \yii\db\ActiveRecord
             'pattern'=>'/^[0-9]+$/',
             'message'=>'Numbers only allowed'
             ],
-            [['user_id'],'integer'],
+            // [['user_id'],'integer'],
         ];
     }
 
@@ -126,7 +127,7 @@ class ParentModel extends \yii\db\ActiveRecord
             'updated_by' => 'Updated By',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'user_id' => 'User ID',
+            // 'user_id' => 'User ID',
         ];
     }
 
@@ -167,11 +168,64 @@ public function init()
         $this->mother_title='Mrs';
     }
 }
-public function getUser()
-{
-    return $this->hasOne(
-        User::className(),
-        ['id'=>'user_id']
-    );
+// public function getUser()
+// {
+//     return $this->hasOne(
+//         User::className(),
+//         ['id'=>'user_id']
+//     );
+// }
+    public function sendEmailNotification()
+    {
+        try {
+
+            Yii::$app->commandBus->handle(
+                new SendEmailCommand([
+                    'subject' => 'New Admission Application #'.$this->id,
+                    'view' => 'admission-created',
+                    'to' => ['admin@yourschool.com'],
+                    'from' => [
+                        Yii::$app->params['robotEmail']
+                        => 'School Admission'
+                    ],
+                    'params' => [
+                        'parent' => $this
+                    ]
+                ])
+            );
+
+        } catch (\Exception $e) {
+
+        }
+    }
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+            if ($insert) {
+
+                $this->sendEmailNotification();
+
+                Yii::$app->commandBus->handle(
+                    new \common\commands\AddToTimelineCommand([
+                        'category' => 'admission',
+                        // 'parent_id' => $parent->id,
+                        // 'parent_id' => $this->id,
+                        'parent_id' => Yii::$app->user->identity->school_id,
+                        'event' => 'admission-application-submitted',
+                        'data' => [
+                            'id' => $this->id,
+                            'content' =>
+                                'New Admission Application Submitted. ID: '.$this->id,
+                            'url' =>
+                                '/admission/parent/view?id='.$this->id
+                        ]
+                    ])
+                );
+            }
+    }
+
 }
-}
+
