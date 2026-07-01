@@ -93,24 +93,6 @@ class ParentController extends Controller
                     $model->children[0]->last_name;
                 }
 
-                Yii::$app->session->setFlash(
-                'browserNotification',
-                [
-                'title' => 'Application Submitted Successfully',
-
-                'body' =>
-
-                'Parent ID : '.$model->id."\n".
-                'Student ID : Pending'."\n".
-                'Parent Name : '.$model->father_first_name.' '.$model->father_last_name."\n".
-                'Student Name : '.$studentName."\n".
-                'Father Mobile : '.$model->father_mobile."\n".
-                'Father Email : '.$model->father_email
-                ]
-                );
-
-                // var_dump(Yii::$app->session->getFlash('browserNotification'));
-                // die();
 
             Yii::$app->mailer->compose()
                 ->setTo($model->father_email)
@@ -553,14 +535,30 @@ class ParentController extends Controller
 
         'body' =>
 
-        'Parent ID : '.$parent->id. " " .
-        'Parent Name : '.$parent->father_first_name.' '.$parent->father_last_name."\n".
-        'Student ID : '.$student->id." ".
-        'Student Name : '.$student->full_name."\n".
-        'Father Mobile : '.$parent->father_mobile."\n".
-        'Father Email : '.$parent->father_email
+            'Parent ID : '.$parent->id."  ".
+            'Parent Name : '.$parent->father_first_name.' '.$parent->father_last_name."\n".
+            'Student ID : '.$student->id."  ".
+            'Student Name : '.$student->full_name."\n".
+            'Class : '.$student->admit_in_class."\n".
+            'Submission Date : '.date('d-m-Y h:i A', $parent->created_at)
         ]
         );
+
+//         Yii::$app->session->setFlash(
+//     'browserNotification',
+//     [
+//         'title' => 'Application Submitted Successfully',
+
+//         'body' =>
+
+//         'Parent ID : '.$parent->id. " " .
+//         'Parent Name : '.$parent->father_first_name.' '.$parent->father_last_name."\n".
+//         'Student ID : '.$student->id." ".
+//         'Student Name : '.$student->full_name."\n".
+//         'Class : '.$student->admit_in_class."\n".
+//         'Submission Date : '.date('d-m-Y h:i A')
+//     ]
+// );
 
         Yii::$app->session->setFlash(
             'success',

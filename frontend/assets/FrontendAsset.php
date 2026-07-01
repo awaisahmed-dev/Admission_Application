@@ -15,6 +15,7 @@ use yii\web\AssetBundle;
  */
 class FrontendAsset extends AssetBundle
 {
+    
     public $basePath = '@webroot';
     public $baseUrl = '@web';
 
@@ -23,7 +24,8 @@ class FrontendAsset extends AssetBundle
     ];
 
     public $js = [
-        'js/app.js',
+        // 'js/app.js',
+        'js/browser-notification.js',
     ];
 
     public $depends = [
@@ -31,4 +33,6 @@ class FrontendAsset extends AssetBundle
         'yii\bootstrap\BootstrapAsset',
         'common\assets\Html5shiv',
     ];
+
+    
 }
