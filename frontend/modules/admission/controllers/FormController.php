@@ -10,6 +10,8 @@ use frontend\modules\admission\models\PolicyModel;
 
 class FormController extends Controller
 {
+    public $layout = '@frontend/views/layouts/main';
+
     public function actionIndex()
     {
         $parentModel = new ParentModel();
@@ -76,6 +78,23 @@ class FormController extends Controller
                     }
 
                     $transaction->commit();
+
+                    Yii::$app->session->setFlash(
+                        'browserNotification',
+                        [
+                            'title' => 'Application Submitted Successfully',
+                            'body' =>
+                                'Parent ID : '.$parentModel->id."\n".
+                                // 'Student ID : Pending'."\n".
+                                'Parent Name : '.$parentModel->father_first_name.' '.$parentModel->father_last_name."\n".
+                                'Student Name : '.$children[0]->first_name.' '.$children[0]->last_name."\n".
+                                'Student Class : '.$children[0]->school_class." ".
+                                'Submission Date : '.date(
+                                'd-m-Y h:i A',
+                                $parentModel->created_at
+                                )
+                        ]
+                    );
 
                     Yii::$app->session->setFlash('success', 'Application Submitted Successfully');
 

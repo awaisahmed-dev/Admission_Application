@@ -27,5 +27,32 @@ $this->beginContent('@frontend/views/layouts/base.php')
 
         <?php echo $content ?>
 
+        <?php
+
+if (Yii::$app->session->hasFlash('browserNotification')) {
+
+    $notification = Yii::$app->session->getFlash('browserNotification');
+
+    $title = json_encode($notification['title']);
+    $body = json_encode($notification['body']);
+
+?>
+<script>
+
+console.log("Notification Block Loaded");
+
+if ("Notification" in window && Notification.permission === "granted") {
+
+    new Notification(<?= $title ?>,{
+        body:<?= $body ?>
+    });
+
+}
+
+</script>
+
+<?php } ?>
+
     </div>
 <?php $this->endContent() ?>
+

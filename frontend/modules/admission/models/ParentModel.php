@@ -2,6 +2,9 @@
 
 namespace frontend\modules\admission\models;
 
+use common\commands\SendEmailCommand;
+use common\commands\AddToTimelineCommand;
+
 use Yii;
 
 /**
@@ -163,4 +166,76 @@ public function init()
         $this->mother_title='Mrs';
     }
 }
+
+     public function sendEmailNotification()
+    {
+        try {
+
+            Yii::$app->commandBus->handle(
+                new SendEmailCommand([
+                    'subject' => 'New Admission Application #'.$this->id,
+                    'view' => 'admission-created',
+                    'to' => ['admin@yourschool.com'],
+                    'from' => [
+                        Yii::$app->params['robotEmail']
+                        => 'School Admission'
+                    ],
+                    'params' => [
+                        'parent' => $this
+                    ]
+                ])
+            );
+
+        } catch (\Exception $e) {
+
+        }
+    }
+
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+            if ($insert) {
+
+                $this->sendEmailNotification();
+
+                Yii::$app->commandBus->handle(
+                    new \common\commands\AddToTimelineCommand([
+                        'category' => 'admission',
+                        // 'parent_id' => $this->id,
+                        'parent_id' => Null,
+                        'event' => 'admission-application-submitted',
+                        'data' => [
+                            'id' => $this->id,
+                            'content' => 'New Admission Application Submitted. ID: '.$this->id,
+                            'url' => '/admission/parent/view?id='.$this->id,
+                        ]
+                    ])
+                );
+                try {
+
+    Yii::$app->commandBus->handle(
+        new AddToTimelineCommand([
+            // 'parent_id' => $this->id,
+            'parent_id' => Yii::$app->user->identity->school_id,
+            'category' => 'admission',
+            'event' => 'admission-application-submitted',
+            'data' => [
+                'id' => $this->id,
+                'content' => 'New Admission Application Submitted',
+                'url' => '/admission/parent/view?id='.$this->id,
+            ]
+        ])
+    );
+
+}catch (\Exception $e) {
+
+    die($e->getMessage());
+
+}
+            }
+    }
+
+
 }

@@ -145,8 +145,8 @@ class FormController extends Controller
                     // 'Student ID : Pending'."\n".
                     'Parent Name : '.$parentModel->father_first_name.' '.$parentModel->father_last_name."\n".
                     'Student Name : '.$children[0]->first_name.' '.$children[0]->last_name."\n".
-                    'Father Mobile : '.$parentModel->father_mobile."\n".
-                    'Father Email : '.$parentModel->father_email
+                    'Student Class : '.$children[0]->school_class."\n".
+                    'Submission Date : '.date('d-m-Y h:i A', $parent->created_at)
             ]
         );
         

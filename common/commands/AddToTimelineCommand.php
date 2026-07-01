@@ -42,5 +42,6 @@ class AddToTimelineCommand extends BaseObject implements SelfHandlingCommand
         $model->event = $command->event;
         $model->data = json_encode($command->data, JSON_UNESCAPED_UNICODE);
         return $model->save(false);
+        
     }
 }
