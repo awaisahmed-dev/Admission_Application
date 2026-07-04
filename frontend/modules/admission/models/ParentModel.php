@@ -4,7 +4,6 @@ namespace frontend\modules\admission\models;
 
 use common\commands\SendEmailCommand;
 use common\commands\AddToTimelineCommand;
-
 use Yii;
 
 /**
@@ -218,7 +217,7 @@ public function init()
     Yii::$app->commandBus->handle(
         new AddToTimelineCommand([
             // 'parent_id' => $this->id,
-            'parent_id' => Yii::$app->user->identity->school_id,
+            'parent_id' => null,
             'category' => 'admission',
             'event' => 'admission-application-submitted',
             'data' => [

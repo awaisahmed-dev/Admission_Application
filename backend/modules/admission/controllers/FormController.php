@@ -146,7 +146,7 @@ class FormController extends Controller
                     'Parent Name : '.$parentModel->father_first_name.' '.$parentModel->father_last_name."\n".
                     'Student Name : '.$children[0]->first_name.' '.$children[0]->last_name."\n".
                     'Student Class : '.$children[0]->school_class."\n".
-                    'Submission Date : '.date('d-m-Y h:i A', $parent->created_at)
+                    'Submission Date : '.date('d-m-Y h:i A', $parentModel->created_at)
             ]
         );
         

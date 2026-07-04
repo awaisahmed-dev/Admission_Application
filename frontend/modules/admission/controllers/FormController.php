@@ -7,6 +7,8 @@ use yii\web\Controller;
 use frontend\modules\admission\models\ParentModel;
 use frontend\modules\admission\models\ChildModel;
 use frontend\modules\admission\models\PolicyModel;
+use common\models\Notification;
+
 
 class FormController extends Controller
 {
@@ -65,36 +67,60 @@ class FormController extends Controller
                     // SAVE CHILDREN
                     foreach ($children as $child) {
                         $child->parent_id = $parentModel->id;
+                        // if (!$child->save()) {
+                        //     throw new \Exception('Child not saved');
+                        // }
                         if (!$child->save()) {
-                            throw new \Exception('Child not saved');
+                            die('<pre>'.print_r($child->errors, true).'</pre>');
                         }
                     }
 
+                    $notification = new Notification();
+
+                    $notification->school_id = 21;
+
+                    $notification->parent_id = $parentModel->id;
+
+                    $notification->parent_type = ParentModel::class;
+
+                    $notification->type = 'Admission';
+
+                    $notification->medium = 'browser';
+
+                    $notification->title = 'Application Submitted';
+                    
+                    $studentName = '';
+                    $class = '';
+                    
+                    if (!empty($children)) {
+                        $studentName = $children[0]->first_name . ' ' . $children[0]->last_name;
+                        $class = $children[0]->school_class;
+                    }
+                    
+                    $notification->contents = json_encode([
+                        'parent_id'   => $parentModel->id,
+                        'parent_name' => $parentModel->father_first_name . ' ' . $parentModel->father_last_name,
+                        'student_name'=> $studentName,
+                        'class'       => $class,
+                        'date'        => date('d-m-Y h:i A', $parentModel->created_at),
+                    ]);
+
+                    $notification->status = 0;
+
+                    $notification->save(false);
+
+
                     // SAVE POLICY
                     $policyModel->parent_id = $parentModel->id;
+                    // if (!$policyModel->save()) {
+                    // if(!$policyModel->validate() || !$policyModel->save(false))
+                    //     throw new \Exception('Policy not saved');
+                    // }
                     if (!$policyModel->save()) {
-                    if(!$policyModel->validate() || !$policyModel->save(false))
-                        throw new \Exception('Policy not saved');
+                        die('<pre>'.print_r($policyModel->errors, true).'</pre>');
                     }
 
                     $transaction->commit();
-
-                    Yii::$app->session->setFlash(
-                        'browserNotification',
-                        [
-                            'title' => 'Application Submitted Successfully',
-                            'body' =>
-                                'Parent ID : '.$parentModel->id."\n".
-                                // 'Student ID : Pending'."\n".
-                                'Parent Name : '.$parentModel->father_first_name.' '.$parentModel->father_last_name."\n".
-                                'Student Name : '.$children[0]->first_name.' '.$children[0]->last_name."\n".
-                                'Student Class : '.$children[0]->school_class." ".
-                                'Submission Date : '.date(
-                                'd-m-Y h:i A',
-                                $parentModel->created_at
-                                )
-                        ]
-                    );
 
                     Yii::$app->session->setFlash('success', 'Application Submitted Successfully');
 
@@ -106,7 +132,13 @@ class FormController extends Controller
 
             } catch (\Exception $e) {
                 $transaction->rollBack();
-                Yii::$app->session->setFlash('error', $e->getMessage());
+                // Yii::$app->session->setFlash('error', $e->getMessage());
+                die(
+        '<pre>'.
+        $e->getMessage()."\n\n".
+        $e->getTraceAsString().
+        '</pre>'
+    );
             }
         }
 

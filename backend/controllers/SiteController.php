@@ -3,7 +3,7 @@ namespace backend\controllers;
 
 use common\components\keyStorage\FormModel;
 use Yii;
-
+use common\models\Notification;
 /**
  * Site controller
  */
@@ -84,4 +84,71 @@ class SiteController extends \yii\web\Controller
     public function actionTerms() {
         Print "Terms";
     }
+
+    public function actionBrowserNotification()
+{
+    Yii::$app->response->format=\yii\web\Response::FORMAT_JSON;
+
+    $notifications=Notification::find()
+        ->where([
+            'medium'=>'browser',
+            'status'=>0
+        ])
+        ->all();
+
+    if(empty($notifications))
+    {
+        return [
+            'success'=>false
+        ];
+    }
+
+    
+    if(count($notifications)>=5){
+
+    foreach($notifications as $notification)
+    {
+        $notification->status=1;
+        $notification->save(false);
+    }
+
+
+        return [
+
+            'success'=>true,
+
+            'title'=>'Admission Notification',
+
+            'body'=>count($notifications).' New Application Forms Submitted'
+
+        ];
+    }
+
+    $notification=$notifications[0];
+
+    $data=json_decode($notification->contents,true);
+
+    $notification->status = 1;
+    $notification->save(false);
+
+    return [
+
+        'success'=>true,
+
+        'title'=>'New Admission Application',
+
+        'body'=>
+
+        "Parent Name : ".$data['parent_name']."\n".
+
+        "Student Name : ".$data['student_name']."\n".
+
+        "Class : ".$data['class']."\n".
+
+        "Submission Date : " . $data['date']
+
+    ];
+
+}
+
 }

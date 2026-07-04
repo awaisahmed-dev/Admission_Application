@@ -24,8 +24,7 @@ class FrontendAsset extends AssetBundle
     ];
 
     public $js = [
-        // 'js/app.js',
-        'js/browser-notification.js',
+        'js/app.js',
     ];
 
     public $depends = [

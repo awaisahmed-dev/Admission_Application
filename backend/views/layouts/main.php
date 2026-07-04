@@ -10,7 +10,7 @@
         </div>
     </div>
 
-    <?php if (Yii::$app->session->hasFlash('browserNotification')):
+    <!-- <?php if (Yii::$app->session->hasFlash('browserNotification')):
 
         $notification = Yii::$app->session->getFlash('browserNotification');
             
@@ -22,7 +22,7 @@
                 new Notification(title,{        body:body    });
             }");
         endif;
-        ?>
+        ?> -->
 
 <?php $this->endContent(); ?>
 

@@ -529,7 +529,7 @@ class ParentController extends Controller
         $transaction->commit();
 
         Yii::$app->session->setFlash(
-        'browserNotification',
+        'browserNotification', 
         [
         'title' => 'Student Admitted Successfully',
 
