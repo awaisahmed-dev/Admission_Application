@@ -417,14 +417,7 @@ $defaultImage = !is_null($schoolid) ? '/img/'.$schoolid.'.png' : 'img/anonymous.
     </div><!-- ./wrapper -->
 
 //======================================================
-     <?php
-         $this->registerJsFile(
-             '@web/js/browser-notification.js',
-             [
-                 'position' => View::POS_END,
-             ]
-         );
-         ?>
+    
 
 
 <?php $this->endContent(); ?>

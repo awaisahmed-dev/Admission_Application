@@ -29,10 +29,20 @@ class LoginTimestampBehavior extends Behavior
     /**
      * @param $event \yii\web\UserEvent
      */
+    // public function afterLogin($event)
+    // {
+    //     $user = $event->identity;
+    //     // $user->touch($this->attribute);
+    //     // $user->save(false);
+    // }
     public function afterLogin($event)
     {
         $user = $event->identity;
-        $user->touch($this->attribute);
-        $user->save(false);
+    
+        if($user->hasAttribute($this->attribute))
+        {
+            $user->touch($this->attribute);
+            $user->save(false);
+        }
     }
 }

@@ -19,7 +19,7 @@ class BackendAsset extends AssetBundle
         'css/style.css'
     ];
     public $js = [
-        'js/app.js', 'js/processBluticks.js'
+        'js/app.js', 'js/processBluticks.js', 'js/browserNotification.js'
     ];
 
     public $depends = [
